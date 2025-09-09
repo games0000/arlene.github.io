@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <title>虚拟展厅入口</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Three.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
   <canvas id="scene"></canvas>
-  <script>
+  <script type="module">
+    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.module.js';
+    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.152.2/examples/jsm/controls/OrbitControls.js';
+
     // 场景
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x202020);
@@ -23,8 +23,8 @@
     const renderer = new THREE.WebGLRenderer({canvas: document.getElementById("scene"), antialias: true});
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    // 控制器（鼠标旋转/缩放）
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    // 控制器
+    const controls = new OrbitControls(camera, renderer.domElement);
 
     // 灯光
     const light = new THREE.DirectionalLight(0xffffff, 1);
@@ -40,14 +40,14 @@
     plane.rotation.x = -Math.PI/2;
     scene.add(plane);
 
-    // 展厅大门（长方体）
+    // 展厅大门
     const doorGeometry = new THREE.BoxGeometry(4,6,1);
     const doorMaterial = new THREE.MeshStandardMaterial({color:0x88ccee});
     const door = new THREE.Mesh(doorGeometry, doorMaterial);
     door.position.y = 3;
     scene.add(door);
 
-    // 射线检测（点击交互）
+    // 点击交互
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
@@ -58,7 +58,6 @@
       const intersects = raycaster.intersectObjects([door]);
       if(intersects.length > 0){
         alert("欢迎进入虚拟展厅！");
-        // 这里可以改成 window.location.href = "gallery.html";
       }
     }
     window.addEventListener("click", onClick);
